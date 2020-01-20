@@ -8,8 +8,10 @@ import PersonDetails from '../person-details/person-details';
 import './app.css';
 import ErrorIndicator from "../error-indicator/error-indicator";
 import PeoplePage from "../people-page/people-page";
+import SwapiService from "../../services/swapi-service";
 
 class App extends Component {
+    swapiService = new SwapiService();
     state = {
         showRandomPlanet: true,
         hasError: false
@@ -26,6 +28,11 @@ class App extends Component {
       console.log('componentDidCatch()');
       this.setState({hasError: true});
     }
+    onPersonSelected = (id) => {
+        this.setState({
+            selectedPerson: id
+        });
+    };
 
     render() {
         if (this.state.hasError) {
@@ -42,9 +49,37 @@ class App extends Component {
                     Toggle Random Planet
                 </button>
 
-                <PeoplePage />
-                <PeoplePage />
-                <PeoplePage />
+                <PeoplePage getData={this.swapiService.getAllPeople} />
+
+                <div className="row mb2">
+                    <div className="col-md-6">
+                        <ItemList
+                            onItemSelected={this.onPersonSelected}
+                            getData={this.swapiService.getAllPlanets}
+                            /*renderItem={({name, population, rotationPeriod}) => (
+                                    `${name} (${population}, ${rotationPeriod})`
+                                )*/
+                            renderItem={(item) => (
+                                <span>{item.name} <button>!</button></span>
+                            )} />
+                    </div>
+                    <div className="col-md-6">
+                        <PersonDetails personId={this.state.selectedPerson} />
+                    </div>
+                </div>
+
+                <div className="row mb2">
+                    <div className="col-md-6">
+                        <ItemList
+                            onItemSelected={this.onPersonSelected}
+                            getData={this.swapiService.getAllStarships}
+                            renderItem={({name, model, manufacturer}) => `${name} (${model}, ${manufacturer})`}/>
+                    </div>
+                    <div className="col-md-6">
+                        <PersonDetails personId={this.state.selectedPerson}/>
+                    </div>
+                </div>
+                
             </div>
         );
     }

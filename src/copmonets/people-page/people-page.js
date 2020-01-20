@@ -9,6 +9,7 @@ export default class PeoplePage extends Component {
         selectedPerson: 3,
         hasError: false
     }
+
     componentDidCatch(error, errorInfo) {
       this.setState({hasError: true})
     }
@@ -27,7 +28,10 @@ export default class PeoplePage extends Component {
         return (
             <div className="row mb2">
                 <div className="col-md-6">
-                    <ItemList onItemSelected={this.onPersonSelected}/>
+                    <ItemList
+                        onItemSelected={this.onPersonSelected}
+                        getData={this.props.getData}
+                        renderItem={({name, gender, birthYear}) => `${name} (${gender}, ${birthYear})`}/>
                 </div>
                 <div className="col-md-6">
                     <PersonDetails personId={selectedPerson}/>
