@@ -1,17 +1,14 @@
 import React, {Component} from "react";
 import './people-page.css';
 import ItemList from "../item-list/item-list";
-import PersonDetails from "../person-details/person-details";
+import ItemDetails from "../item-details/item-details";
 import ErrorIndicator from "../error-indicator/error-indicator";
+import Row from "../Row/Row";
+import ErrorBoundry from "../error-boundry/error-boundry";
 
 export default class PeoplePage extends Component {
     state = {
         selectedPerson: 3,
-        hasError: false
-    }
-
-    componentDidCatch(error, errorInfo) {
-      this.setState({hasError: true})
     }
 
     onPersonSelected = (id) => {
@@ -21,22 +18,25 @@ export default class PeoplePage extends Component {
     };
 
     render() {
-        const {selectedPerson, hasError} = this.state;
-        if (hasError) {
-            return <ErrorIndicator/>
-        }
+        const {selectedPerson} = this.state;
+        const itemList = (
+            <ItemList
+                onItemSelected={this.onPersonSelected}
+                getData={this.props.getData} >
+
+                {(i) => (
+                    `${i.name} (${i.birthYear})`
+                )}
+            </ItemList>
+        );
+        const personDetails = (
+            <ItemDetails personId={selectedPerson}/>
+        );
         return (
-            <div className="row mb2">
-                <div className="col-md-6">
-                    <ItemList
-                        onItemSelected={this.onPersonSelected}
-                        getData={this.props.getData}
-                        renderItem={({name, gender, birthYear}) => `${name} (${gender}, ${birthYear})`}/>
-                </div>
-                <div className="col-md-6">
-                    <PersonDetails personId={selectedPerson}/>
-                </div>
-            </div>
-        )
+            <ErrorBoundry>
+                <Row left={itemList} right={personDetails} />
+            </ErrorBoundry>
+            
+        );
     }
 }
