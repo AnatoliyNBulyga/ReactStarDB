@@ -2,12 +2,11 @@ import React, {Component} from 'react';
 
 import Header from '../header/header';
 import RandomPlanet from '../random-planet/random-planet';
-import ItemList from '../item-list/item-list';
 import ItemDetails, {Record} from '../item-details/item-details';
+import ItemList from '../item-list/item-list';
 
 import './app.css';
 import ErrorIndicator from "../error-indicator/error-indicator";
-import PeoplePage from "../people-page/people-page";
 import SwapiService from "../../services/swapi-service";
 import ErrorBoundry from "../error-boundry/error-boundry";
 import Row from "../Row/Row";
@@ -44,7 +43,9 @@ class App extends Component {
         const { getPerson,
             getStarship,
             getPersonImage,
-            getStarshipImage } = this.swapiService;
+            getStarshipImage,
+            getAllPeople,
+            getAllPlanets } = this.swapiService;
         
         const personDetails = (
             <ItemDetails
@@ -52,6 +53,7 @@ class App extends Component {
                 getData={getPerson}
                 getImageUrl={getPersonImage}>
                 <Record field="gender" label="Gender" />
+                <Record field="birthYear" label="Birth Year" />
                 <Record field="eyeColor" label="Eye Color" />
             </ItemDetails>
         );
@@ -68,11 +70,22 @@ class App extends Component {
         return (
             <ErrorBoundry>
                 <div className="stardb-app">
-                    <Header/>
+                    <Header />
 
-                    <Row
-                        left={personDetails}
-                        right={starshipDetails} />
+                    <ItemList
+                        getData={getAllPeople}
+                        onItemSelected={() => {}}>
+
+                        { ({name}) => <span>{name}</span> }
+                    </ItemList>
+
+                    <ItemList
+                        getData={getAllPlanets}
+                        onItemSelected={() => {}}>
+
+                        { ({name}) => <span>{name}</span> }
+                    </ItemList>
+
                 </div>
             </ErrorBoundry>
         );
