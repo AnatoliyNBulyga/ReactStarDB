@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import Spinner from "../spinner/spinner";
-import ErrorIndicator from "../error-indicator/error-indicator";
 
 
 const withData = (View, getData) => {
@@ -21,5 +20,5 @@ const withData = (View, getData) => {
             return <View {...this.props} data={data}/>
         }
     };
-}
+};
 export default withData;
