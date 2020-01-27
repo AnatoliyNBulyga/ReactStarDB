@@ -16,18 +16,19 @@ import {
 import PersonDetails from "../sw-components/person-details";
 import PlanetDetails from "../sw-components/planet-details";
 import StarshipDetails from "../sw-components/starship-details";
+import DummySwapiService from "../../services/dummy-swapi-service";
 
 class App extends Component {
-    swapiService = new SwapiService();
     state = {
         showRandomPlanet: true,
-        hasError: false
+        hasError: false,
+        swapiService: new DummySwapiService()
     };
     toggleRandomPlanet = () => {
         this.setState((state) => {
             return {
                 showRandomPlanet: !state.showRandomPlanet
-            }
+            };
         });
     };
 
@@ -40,6 +41,16 @@ class App extends Component {
             selectedPerson: id
         });
     };
+    onServiceChange = () => {
+        this.setState( ({swapiService}) => {
+            const Service = swapiService instanceof SwapiService
+                            ? DummySwapiService
+                            : SwapiService;
+            return {
+                swapiService: new Service()
+            }
+        });
+    }
 
     render() {
         if (this.state.hasError) {
@@ -49,9 +60,7 @@ class App extends Component {
         const { getPerson,
             getStarship,
             getPersonImage,
-            getStarshipImage,
-            getAllPeople,
-            getAllPlanets } = this.swapiService;
+            getStarshipImage} = this.state.swapiService;
         
         const personDetails = (
             <ItemDetails
@@ -75,9 +84,9 @@ class App extends Component {
         );
         return (
             <ErrorBoundry>
-                <SwapiServiceProvider value={this.swapiService}>
+                <SwapiServiceProvider value={this.state.swapiService}>
                     <div className="stardb-app">
-                        <Header />
+                        <Header onServiceChange={this.onServiceChange} />
 
                         <PersonDetails itemId={11}/>
                         <PlanetDetails itemId={3}/>
