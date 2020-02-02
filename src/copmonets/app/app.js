@@ -12,6 +12,8 @@ import PeoplePage from "../pages/people-page";
 import PlanetsPage from "../pages/planets-page";
 import StarshipsPage from "../pages/starships-page";
 
+import { BrowserRouter as Router, Route } from "react-router-dom";
+
 class App extends Component {
     state = {
         hasError: false,
@@ -42,13 +44,18 @@ class App extends Component {
         return (
             <ErrorBoundry>
                 <SwapiServiceProvider value={this.state.swapiService}>
-                    <div className="stardb-app">
-                        <Header onServiceChange={this.onServiceChange} />
-                        <RandomPlanet />
-                        <PeoplePage />
-                        <PlanetsPage />
-                        <StarshipsPage/>
-                    </div>
+                    <Router>
+                        <div className="stardb-app">
+                            <Header onServiceChange={this.onServiceChange} />
+                            <RandomPlanet />
+                            <Route path="/"
+                                   render={() => <h2> Welcome to StarDB</h2>}
+                                   exact />
+                            <Route path="/people" component={PeoplePage} />
+                            <Route path="/planets" component={PlanetsPage} />
+                            <Route path="/starships" component={StarshipsPage} />
+                        </div>
+                    </Router>
                 </SwapiServiceProvider>
             </ErrorBoundry>
         );
