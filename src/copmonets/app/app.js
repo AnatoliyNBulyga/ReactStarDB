@@ -13,6 +13,7 @@ import PlanetsPage from "../pages/planets-page";
 import StarshipsPage from "../pages/starships-page";
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
+import StarshipDetails from "../sw-components/starship-details";
 
 class App extends Component {
     state = {
@@ -51,9 +52,14 @@ class App extends Component {
                             <Route path="/"
                                    render={() => <h2> Welcome to StarDB</h2>}
                                    exact />
-                            <Route path="/people" component={PeoplePage} />
-                            <Route path="/planets" component={PlanetsPage} />
-                            <Route path="/starships" component={StarshipsPage} />
+                            <Route path="/people/:id?" component={PeoplePage} />
+                            <Route path="/planets/" component={PlanetsPage} />
+                            <Route path="/starships/" exact component={StarshipsPage} />
+                            <Route path="/starships/:id"
+                                   render={ ({ match }) => {
+                                      const { id } = match.params;
+                                      return <StarshipDetails itemId={id}/>
+                                   } } />
                         </div>
                     </Router>
                 </SwapiServiceProvider>
